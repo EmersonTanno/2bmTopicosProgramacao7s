@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
+import { RequestUserDto } from './dto/request-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -32,21 +33,31 @@ export class UsersService {
   async findAll() {
     try{
       const users = await this.userModel.find();
-      return users;
+
+      if(users.length == 0){
+        throw new NotFoundException('Nenhuma ocorrência encontrada');
+      }
+
+      const requestedUsers: RequestUserDto[] = users.map((o) => ({
+        id: o.id,
+        name: o.name,
+      }));
+
+      return requestedUsers;
     }catch (e){
       throw new BadRequestException(e.message);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} user`;
+  // }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+  // update(id: number, updateUserDto: UpdateUserDto) {
+  //   return `This action updates a #${id} user`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} user`;
+  // }
 }
