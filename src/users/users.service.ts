@@ -35,7 +35,7 @@ export class UsersService {
       const users = await this.userModel.find();
 
       if(users.length == 0){
-        throw new NotFoundException('Nenhuma ocorrência encontrada');
+        throw new NotFoundException('Nenhuma usuário encontrado');
       }
 
       const requestedUsers: RequestUserDto[] = users.map((o) => ({
@@ -45,13 +45,47 @@ export class UsersService {
 
       return requestedUsers;
     }catch (e){
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
       throw new BadRequestException(e.message);
     }
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
+  async findOne(id: number) {
+    try
+    {
+      const user = await this.userModel.findById(id);
+
+      if(!user){
+        throw new NotFoundException(`Nenhum usuário encontrado com id: ${id}`);
+      }
+      return user;
+    } catch (e){
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  async findOneByName(name: string) {
+    try
+    {
+      const user = await this.userModel.findOne({name});
+
+      if(!user){
+        throw new NotFoundException(`Nenhum usuário encontrado com name: ${name}`);
+      }
+
+      return user;
+    } catch (e){
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
+  }
 
   // update(id: number, updateUserDto: UpdateUserDto) {
   //   return `This action updates a #${id} user`;
