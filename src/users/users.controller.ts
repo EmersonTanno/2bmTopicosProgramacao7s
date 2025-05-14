@@ -5,21 +5,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from './roles.decorator';
 import { Role } from 'src/enum/roles.enum';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @UseGuards()
+  @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Admin)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @UseGuards()
-  @Roles(Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User || Role.Admin)
   findAll() {
     return this.usersService.findAll();
   }
