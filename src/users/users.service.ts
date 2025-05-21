@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -7,15 +7,37 @@ import { Model } from 'mongoose';
 import { RequestUserDto } from './dto/request-user.dto';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
+import { Role } from 'src/enum/roles.enum';
+import { Console } from 'console';
 dotenv.config();
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit{
 
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>
   ) {}
+
+  async onModuleInit() {
+    await this.createDefaultAdmin();
+  }
+
+  private async createDefaultAdmin() {
+    const existingAdmin = await this.userModel.findOne({ roles: Role.Admin });
+
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const adminUser = new this.userModel({
+        name: 'Kannon',
+        password: hashedPassword,
+        roles: [Role.Admin],
+      });
+
+      await adminUser.save();
+      console.log('Usuário admin padrão criado: Kannon / admin123');
+    }
+  }
 
 
   async create(createUserDto: CreateUserDto) {
