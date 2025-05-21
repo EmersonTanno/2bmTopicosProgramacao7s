@@ -5,6 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
 import { RequestUserDto } from './dto/request-user.dto';
+import * as bcrypt from 'bcrypt';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class UsersService {
@@ -16,17 +19,23 @@ export class UsersService {
 
 
   async create(createUserDto: CreateUserDto) {
-    try{
-      const existingUser = await this.userModel.findOne({name: createUserDto.name});
-      if(existingUser)
-      {
+    try {
+      const existingUser = await this.userModel.findOne({ name: createUserDto.name });
+      if (existingUser) {
         throw new Error(`Já existe um usuário com o nome ${createUserDto.name}`);
       }
 
-      const user = new this.userModel(createUserDto);
+      const saltOrRounds =  parseInt(process.env.SALTORROUNDS || "10");
+
+      const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
+      const user = new this.userModel({
+        ...createUserDto,
+        password: hashedPassword,
+      });
+
       return await user.save();
-    } catch (e){
-      throw new BadRequestException(e.message)
+    } catch (e) {
+      throw new BadRequestException(e.message);
     }
   }
 
