@@ -122,7 +122,21 @@ export class UsersService implements OnModuleInit{
   //   return `This action updates a #${id} user`;
   // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async remove(id: string) {
+    try {
+      const deletedUser = await this.userModel.findOneAndDelete({ _id: id });
+
+      if (!deletedUser) {
+        throw new NotFoundException(`Usuário com id ${id} não encontrado`);
+      }
+
+      return deletedUser;
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
+  }
+
 }
