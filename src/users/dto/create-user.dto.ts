@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, Matches } from "class-validator";
 import { Role } from "src/enum/roles.enum";
 
 export class CreateUserDto {
@@ -9,6 +9,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
+    @Matches(/\S/, { message: 'A nova senha não pode conter apenas espaços' })
     password: string;
 
     @IsNotEmpty()
