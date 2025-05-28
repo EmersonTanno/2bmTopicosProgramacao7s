@@ -126,9 +126,36 @@ export class UsersService implements OnModuleInit{
     }
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      const findedUser = await this.userModel.findById(id);
+      if (!findedUser) {
+        throw new NotFoundException(`Usuário com id ${id} não encontrado`);
+      }
+
+      if (updateUserDto.name) {
+        const existingUser = await this.userModel.findOne({ name: updateUserDto.name });
+        if (existingUser && existingUser.id !== id) {
+          throw new Error(`Já existe um usuário com o nome ${updateUserDto.name}`);
+        }
+      }
+
+      if (updateUserDto.password != null) {
+        const saltOrRounds = parseInt(process.env.SALTORROUNDS || "10");
+        const hashedPassword = await bcrypt.hash(updateUserDto.password, saltOrRounds);
+        updateUserDto.password = hashedPassword;
+      }
+
+      const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+      return updatedUser;
+    } catch (e) {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
+  }
+
 
   async remove(id: string) {
     try {
@@ -138,7 +165,7 @@ export class UsersService implements OnModuleInit{
         throw new NotFoundException(`Usuário com id ${id} não encontrado`);
       }
 
-      return deletedUser;
+      return;
     } catch (e) {
       if (e instanceof NotFoundException) {
         throw e;
