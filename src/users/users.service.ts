@@ -72,6 +72,7 @@ export class UsersService implements OnModuleInit{
       const requestedUsers: RequestUserDto[] = users.map((o) => ({
         id: o.id,
         name: o.name,
+        roles: o.roles,
       }));
 
       return requestedUsers;
@@ -91,7 +92,14 @@ export class UsersService implements OnModuleInit{
       if(!user){
         throw new NotFoundException(`Nenhum usuário encontrado com id: ${id}`);
       }
-      return user;
+
+      const requestedUsers: RequestUserDto = { 
+        id: user.id,
+        name: user.name,
+        roles: user.roles,
+      }
+
+      return requestedUsers;
     } catch (e){
       if (e instanceof NotFoundException) {
         throw e;
