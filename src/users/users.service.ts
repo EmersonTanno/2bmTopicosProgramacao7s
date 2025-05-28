@@ -83,7 +83,7 @@ export class UsersService implements OnModuleInit{
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     try
     {
       const user = await this.userModel.findById(id);
