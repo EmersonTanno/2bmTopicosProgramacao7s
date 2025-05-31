@@ -13,28 +13,28 @@ export class UsersController {
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.USER, Role.ADMIN)
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.USER, Role.ADMIN)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
@@ -42,7 +42,7 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(204)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

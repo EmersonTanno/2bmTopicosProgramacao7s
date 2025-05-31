@@ -24,14 +24,14 @@ export class UsersService implements OnModuleInit{
   }
 
   private async createDefaultAdmin() {
-    const existingAdmin = await this.userModel.findOne({ roles: Role.Admin });
+    const existingAdmin = await this.userModel.findOne({ roles: Role.ADMIN });
 
     if (!existingAdmin) {
       const hashedPassword = await bcrypt.hash('admin123', 10);
       const adminUser = new this.userModel({
         name: 'Kannon',
         password: hashedPassword,
-        roles: [Role.Admin],
+        roles: [Role.ADMIN],
       });
 
       await adminUser.save();
