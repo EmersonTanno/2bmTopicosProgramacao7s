@@ -86,7 +86,22 @@ export class TasksService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: string) {
+    try
+    {
+      const deletedTask = await this.taskModel.findByIdAndDelete(id);
+
+      if(!deletedTask){
+        throw new NotFoundException(`Task com id: ${id} não encontrado`);
+      }
+
+      return;
+    }catch(e)
+    {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
   }
 }
