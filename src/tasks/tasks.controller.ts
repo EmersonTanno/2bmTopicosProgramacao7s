@@ -47,4 +47,11 @@ export class TasksController {
   remove(@Param('id') id: string) {
     return this.tasksService.remove(id);
   }
+
+  @Get('user/tasks')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  getByUser(@User('sub') userId: string) {
+    return this.tasksService.findTasksByUser(userId);
+  }
 }

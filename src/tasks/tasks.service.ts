@@ -34,12 +34,7 @@ export class TasksService {
     try
     {
       const foundedTasks = await this.taskModel.find();
-
-      if(foundedTasks.length == 0)
-      {
-        return "Ainda não existem task"
-      }
-
+      
       return foundedTasks
     } catch(e)
     {
@@ -101,6 +96,18 @@ export class TasksService {
       if (e instanceof NotFoundException) {
         throw e;
       }
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  async findTasksByUser(id: string) {
+    try
+    {
+      const foundedTasks = await this.taskModel.find({userId : id})
+
+      return foundedTasks;
+    }catch(e)
+    {
       throw new BadRequestException(e.message);
     }
   }
