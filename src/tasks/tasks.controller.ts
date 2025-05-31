@@ -7,6 +7,8 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/users/roles.decorator';
 import { Role } from 'src/users/enum/roles.enum';
 import { User } from 'src/auth/decorators/user.decorator';
+import { TaskStatus } from './enum/taskStatus.enum';
+import { ObjectId } from 'mongoose';
 
 @Controller('tasks')
 export class TasksController {
@@ -53,5 +55,12 @@ export class TasksController {
   @Roles(Role.ADMIN, Role.USER)
   getByUser(@User('sub') userId: string) {
     return this.tasksService.findTasksByUser(userId);
+  }
+
+  @Put('updateStatus/:id/:status')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  updateTaskStatus(@Param('id') id: string, @Param('status') status: string, @User('sub') userId: ObjectId) {
+    return this.tasksService.updateTaskStatus(id, userId, status);
   }
 }

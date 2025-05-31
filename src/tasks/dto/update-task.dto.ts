@@ -8,15 +8,15 @@ export class UpdateTaskDto extends PartialType(CreateTaskDto) {
     @IsString()
     @IsNotEmpty()
     @Matches(/\S/, { message: 'O nome da task não pode conter apenas espaços' })
-    taskName: string;
+    taskName?: string;
 
     @IsOptional()
     @IsString()
     @IsNotEmpty()
     @Matches(/\S/, { message: 'A descrição da task não pode conter apenas espaços' })
-    taskDescription: string;
+    taskDescription?: string;
 
     @IsOptional()
     @IsEnum(TaskStatus)
-    taskStatus: TaskStatus;
+    taskStatus?: TaskStatus;
 }
