@@ -1,11 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Task, TaskDocument } from './entities/task.entity';
+import { Model } from 'mongoose';
+import { TaskStatus } from './enum/taskStatus.enum';
 
 @Injectable()
 export class TasksService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+
+  constructor(
+    @InjectModel(Task.name)
+    private taskModel: Model<TaskDocument>
+  ){}
+
+  async create(createTaskDto: CreateTaskDto, userId: string) {
+    try 
+    {
+      const newTask = new this.taskModel({
+        ...createTaskDto,
+        userId,
+        taskStatus: TaskStatus.BACKLOG,
+      });
+
+      return await newTask.save();
+    } catch (e) 
+    {
+      throw new BadRequestException(e.message);
+    }
   }
 
   findAll() {
