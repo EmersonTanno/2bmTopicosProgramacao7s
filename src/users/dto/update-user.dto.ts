@@ -6,6 +6,7 @@ import { Role } from 'src/enum/roles.enum';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsString()
     @IsOptional()
+    @Matches(/\S/, { message: 'O novo nome não pode conter apenas espaços' })
     name: string;
 
     @IsString()

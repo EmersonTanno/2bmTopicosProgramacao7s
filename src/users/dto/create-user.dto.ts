@@ -5,11 +5,12 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
+    @Matches(/\S/, { message: 'O usuário não pode conter apenas espaços' })
     name: string;
 
     @IsString()
     @IsNotEmpty()
-    @Matches(/\S/, { message: 'A nova senha não pode conter apenas espaços' })
+    @Matches(/\S/, { message: 'A senha não pode conter apenas espaços' })
     password: string;
 
     @IsNotEmpty()
