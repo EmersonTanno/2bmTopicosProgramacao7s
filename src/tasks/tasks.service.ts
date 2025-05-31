@@ -66,8 +66,24 @@ export class TasksService {
     }
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(id: string, updateTaskDto: UpdateTaskDto) {
+    try
+    {
+      const foundedTask = await this.taskModel.findById(id);
+
+      if(!foundedTask){
+        throw new NotFoundException(`Task com id: ${id} não encontrado`);
+      }
+
+      return await this.taskModel.findByIdAndUpdate(id, updateTaskDto, {new: true});
+
+    } catch(e)
+    {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
   }
 
   remove(id: number) {
