@@ -30,8 +30,21 @@ export class TasksService {
     }
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  async findAll() {
+    try
+    {
+      const foundedTasks = await this.taskModel.find();
+
+      if(foundedTasks.length == 0)
+      {
+        return "Ainda não existem task"
+      }
+
+      return foundedTasks
+    } catch(e)
+    {
+      throw new BadRequestException(e.message);
+    }
   }
 
   findOne(id: number) {

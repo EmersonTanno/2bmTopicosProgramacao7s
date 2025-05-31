@@ -20,6 +20,8 @@ export class TasksController {
   }
 
   @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
   findAll() {
     return this.tasksService.findAll();
   }
