@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/users/roles.decorator';
+import { Role } from 'src/users/enum/roles.enum';
+import { User } from 'src/auth/decorators/user.decorator';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  create(@Body() createTaskDto: CreateTaskDto, @User('sub') userId: string) {
+    return this.tasksService.create(createTaskDto, userId);
   }
 
   @Get()
