@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -47,8 +47,23 @@ export class TasksService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOne(id: string) {
+    try
+    {
+      const foundedTask = await this.taskModel.findById(id);
+
+      if(!foundedTask){
+        throw new NotFoundException(`Task com id: ${id} não encontrado`);
+      }
+
+      return foundedTask;
+    }catch(e)
+    {
+      if (e instanceof NotFoundException) {
+        throw e;
+      }
+      throw new BadRequestException(e.message);
+    }
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {
