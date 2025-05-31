@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { Role } from "src/enum/roles.enum";
+import { Role } from "src/users/enum/roles.enum";
 
 export class RequestUserDto {
     id: ObjectId;

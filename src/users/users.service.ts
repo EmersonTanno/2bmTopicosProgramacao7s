@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 import { RequestUserDto } from './dto/request-user.dto';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import { Role } from 'src/enum/roles.enum';
+import { Role } from 'src/users/enum/roles.enum';
 import { Console } from 'console';
 dotenv.config();
 
