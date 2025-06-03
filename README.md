@@ -154,7 +154,7 @@ Resposta:
 DELETE `/users/:id` </br>
 **Requer:**
 - Role: `admin`
-- Header: `Authorization: Bearer <token>`
+- Header: `Authorization: Bearer <token>`</br>
 Resposta:
 `204 No Content`
 
