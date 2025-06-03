@@ -86,7 +86,7 @@ Resposta:
 GET `/users` </br>
 **Requer:**
 - Role: `admin` ou `user`
-- Header: `Authorization: Bearer <token>`
+- Header: `Authorization: Bearer <token>` </br>
 Resposta:
 `200 OK`
 ``` json
@@ -113,7 +113,7 @@ Resposta:
 GET `/users/:id` </br>
 **Requer:**
 - Role: `admin` ou `user`
-- Header: `Authorization: Bearer <token>`
+- Header: `Authorization: Bearer <token>` </br>
 Resposta:
 `200 OK`
 ``` json
