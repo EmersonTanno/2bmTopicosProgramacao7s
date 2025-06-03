@@ -46,6 +46,10 @@ SALTORROUNDS=10
 
 ## 📚 Rotas da API
 
+- [🔑 Auth](#-auth)
+- [👤 User](#-user)
+- [📝 Tasks](#-tasks)
+
 ### 🔑 Auth
 #### ➕ Fazer Login
 POST `/auth/login` </br>
