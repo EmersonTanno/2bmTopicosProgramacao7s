@@ -55,7 +55,9 @@ export class UsersService implements OnModuleInit{
         password: hashedPassword,
       });
 
-      return await user.save();
+      user.save();
+
+      return;
     } catch (e) {
       throw new BadRequestException(e.message);
     }
@@ -143,7 +145,17 @@ export class UsersService implements OnModuleInit{
       }
 
       const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
-      return updatedUser;
+
+      if (!updatedUser) {
+        throw new NotFoundException(`Erro ao atualizar: usuário com id ${id} não encontrado`);
+      }
+
+      const requestedUsers: RequestUserDto = { 
+        id: updatedUser.id,
+        name: updatedUser.name,
+        roles: updatedUser.roles,
+      }
+      return requestedUsers;
     } catch (e) {
       if (e instanceof NotFoundException) {
         throw e;
