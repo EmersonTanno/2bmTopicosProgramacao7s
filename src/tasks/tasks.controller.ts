@@ -46,8 +46,8 @@ export class TasksController {
   @HttpCode(204)
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(id);
+  remove(@Param('id') id: string, @User('sub') userId: ObjectId) {
+    return this.tasksService.remove(id, userId);
   }
 
   @Get('user/tasks')

@@ -85,9 +85,19 @@ export class TasksService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: ObjectId) {
     try
     {
+      const foundedTask = await this.taskModel.findById(id);
+
+      if (!foundedTask) {
+        throw new NotFoundException(`Task com id: ${id} não encontrado`);
+      }
+
+      if (foundedTask.userId != userId) {
+        throw new UnauthorizedException(`Task com id: ${id} não pertence ao usuário com id: ${userId}`);
+      }
+
       const deletedTask = await this.taskModel.findByIdAndDelete(id);
 
       if(!deletedTask){
@@ -97,7 +107,7 @@ export class TasksService {
       return;
     }catch(e)
     {
-      if (e instanceof NotFoundException) {
+      if (e instanceof NotFoundException || e instanceof UnauthorizedException) {
         throw e;
       }
       throw new BadRequestException(e.message);
