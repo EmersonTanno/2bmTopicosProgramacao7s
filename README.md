@@ -275,7 +275,7 @@ GET `/tasks/user/tasks` </br>
 - Role: `admin` ou `user`
 - Header: `Authorization: Bearer <token>` </br>
 Resposta:
-`200 OK`
+`204 No Content`
 ``` json
 [
     {
