@@ -61,20 +61,24 @@ export class TasksService {
     }
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto) {
+  async update(id: string, userId: ObjectId, updateTaskDto: UpdateTaskDto) {
     try
     {
       const foundedTask = await this.taskModel.findById(id);
 
-      if(!foundedTask){
+      if (!foundedTask) {
         throw new NotFoundException(`Task com id: ${id} não encontrado`);
+      }
+
+      if (foundedTask.userId != userId) {
+        throw new UnauthorizedException(`Task com id: ${id} não pertence ao usuário com id: ${userId}`);
       }
 
       return await this.taskModel.findByIdAndUpdate(id, updateTaskDto, {new: true});
 
     } catch(e)
     {
-      if (e instanceof NotFoundException) {
+      if (e instanceof NotFoundException || e instanceof UnauthorizedException) {
         throw e;
       }
       throw new BadRequestException(e.message);

@@ -38,8 +38,8 @@ export class TasksController {
   @Put(':id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.USER)
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(id, updateTaskDto);
+  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto, @User('sub') userId: ObjectId) {
+    return this.tasksService.update(id, userId, updateTaskDto);
   }
 
   @Delete(':id')
