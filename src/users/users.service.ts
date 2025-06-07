@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, OnModuleInit, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { RequestUserDto } from './dto/request-user.dto';
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
@@ -82,13 +82,18 @@ export class UsersService implements OnModuleInit{
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, userId: ObjectId, roles: Role[]) {
     try
     {
       const user = await this.userModel.findById(id);
 
       if(!user){
         throw new NotFoundException(`Nenhum usuário encontrado com id: ${id}`);
+      }
+
+      if(!roles.includes(Role.ADMIN) && user.id != userId)
+      {
+        throw new UnauthorizedException("Você não possui acesso a outro usuários");
       }
 
       const requestedUsers: RequestUserDto = { 
@@ -99,7 +104,7 @@ export class UsersService implements OnModuleInit{
 
       return requestedUsers;
     } catch (e){
-      if (e instanceof NotFoundException) {
+      if (e instanceof NotFoundException || e instanceof UnauthorizedException) {
         throw e;
       }
       throw new BadRequestException(e.message);

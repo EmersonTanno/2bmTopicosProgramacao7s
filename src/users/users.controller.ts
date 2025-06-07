@@ -6,6 +6,8 @@ import { Roles } from './roles.decorator';
 import { Role } from 'src/users/enum/roles.enum';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { User } from 'src/auth/decorators/user.decorator';
+import { ObjectId } from 'mongoose';
 
 @Controller('users')
 export class UsersController {
@@ -28,8 +30,8 @@ export class UsersController {
   @Get(':id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.USER, Role.ADMIN)
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param('id') id: string, @User('sub') userId: ObjectId, @User('roles') roles: Role[]) {
+    return this.usersService.findOne(id, userId, roles);
   }
 
   @Put(':id')
