@@ -87,15 +87,16 @@ export class UsersService implements OnModuleInit{
   async findOne(id: string, userId: ObjectId, roles: Role[]) {
     try
     {
+
+      if(!roles.includes(Role.ADMIN) && id != String(userId))
+      {
+        throw new UnauthorizedException("Você não possui acesso a outro usuários");
+      }
+
       const user = await this.userModel.findById(id);
 
       if(!user){
         throw new NotFoundException(`Nenhum usuário encontrado com id: ${id}`);
-      }
-
-      if(!roles.includes(Role.ADMIN) && user.id != userId)
-      {
-        throw new UnauthorizedException("Você não possui acesso a outro usuários");
       }
 
       const requestedUsers: RequestUserDto = { 
