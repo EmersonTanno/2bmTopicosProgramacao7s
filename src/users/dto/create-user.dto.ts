@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Matches } from "class-validator";
+import {  IsEmail, IsNotEmpty, IsString, Matches } from "class-validator";
 import { Role } from "src/users/enum/roles.enum";
 
 export class CreateUserDto {
@@ -7,6 +7,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     @Matches(/\S/, { message: 'O usuário não pode conter apenas espaços' })
     name: string;
+
+    @IsEmail({}, { message: 'E-mail inválido' })
+    @IsNotEmpty()
+    email: string;
 
     @IsString()
     @IsNotEmpty()

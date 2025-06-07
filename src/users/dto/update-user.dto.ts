@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
-import { IsOptional, IsString, Matches } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Matches } from 'class-validator';
 import { Role } from 'src/users/enum/roles.enum';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -8,6 +8,10 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
     @Matches(/\S/, { message: 'O novo nome não pode conter apenas espaços' })
     name: string;
+
+    @IsEmail({}, { message: 'E-mail inválido' })
+    @IsOptional()
+    email: string;
 
     @IsString()
     @IsOptional()

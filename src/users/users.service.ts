@@ -30,6 +30,7 @@ export class UsersService implements OnModuleInit{
       const hashedPassword = await bcrypt.hash('admin123', 10);
       const adminUser = new this.userModel({
         name: 'Kannon',
+        email: 'kannon@gmail.com',
         password: hashedPassword,
         roles: [Role.ADMIN],
       });
@@ -70,6 +71,7 @@ export class UsersService implements OnModuleInit{
       const requestedUsers: RequestUserDto[] = users.map((o) => ({
         id: o.id,
         name: o.name,
+        email: o.email,
         roles: o.roles,
       }));
 
@@ -99,6 +101,7 @@ export class UsersService implements OnModuleInit{
       const requestedUsers: RequestUserDto = { 
         id: user.id,
         name: user.name,
+        email: user.email,
         roles: user.roles,
       }
 
@@ -158,6 +161,7 @@ export class UsersService implements OnModuleInit{
       const requestedUsers: RequestUserDto = { 
         id: updatedUser.id,
         name: updatedUser.name,
+        email: updatedUser.email,
         roles: updatedUser.roles,
       }
       return requestedUsers;
