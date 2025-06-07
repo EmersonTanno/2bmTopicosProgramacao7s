@@ -79,6 +79,7 @@ Body:
 ```json
 {
   "name": "User1",
+  "email": "user1@gmail.com",
   "password": "123",
   "roles": ["user"]
 }
@@ -89,22 +90,24 @@ Resposta:
 #### 📄 Listar todos os usuários
 GET `/users` </br>
 **Requer:**
-- Role: `admin` ou `user`
+- Role: `admin`
 - Header: `Authorization: Bearer <token>` </br>
 Resposta:
 `200 OK`
 ``` json
 [
     {
-        "id": "682e0a1de157f8dc7a761497",
+        "id": "684498b953380d354c85c49e",
         "name": "Kannon",
+        "email": "kannon@gmail.com",
         "roles": [
             "admin"
         ]
     },
     {
-        "id": "68370ce1d68f748950195620",
-        "name": "Saga",
+        "id": "684498ff53380d354c85c4a2",
+        "name": "Shura",
+        "email": "shura@gmail.com",
         "roles": [
             "user"
         ]
@@ -122,10 +125,11 @@ Resposta:
 `200 OK`
 ``` json
 {
-    "id": "68370ce1d68f748950195620",
-    "name": "Saga",
+    "id": "684498b953380d354c85c49e",
+    "name": "Kannon",
+    "email": "kannon@gmail.com",
     "roles": [
-        "user"
+        "admin"
     ]
 }
 ```
@@ -133,13 +137,14 @@ Resposta:
 #### ✏️ Atualizar usuário
 PUT `/users/:id` </br>
 **Requer:**
-- Role: `admin`
+- Role: `admin` ou `user`
 - Header: `Authorization: Bearer <token>`
 Body:
 ``` json
 {
-    "name": "Saga",
-    "password": "asdas"
+    "name": "newName",
+    "email": "newEmail@gmail.com",
+    "password": "newPassword"
 }
 ```
 Resposta:
@@ -147,7 +152,8 @@ Resposta:
 ``` json
 {
     "id": "68370ce1d68f748950195620",
-    "name": "Saga",
+    "name": "newName",
+    "email": "newEmail@gmail.com",
     "roles": [
         "user"
     ]
