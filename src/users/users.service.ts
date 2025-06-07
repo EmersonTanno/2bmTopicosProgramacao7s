@@ -133,8 +133,13 @@ export class UsersService implements OnModuleInit{
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, userId: ObjectId, roles: Role[]) {
     try {
+      if(!roles.includes(Role.ADMIN) && id != String(userId))
+      {
+        throw new UnauthorizedException("Você não possui acesso a outro usuários");
+      }
+
       const findedUser = await this.userModel.findById(id);
       if (!findedUser) {
         throw new NotFoundException(`Usuário com id ${id} não encontrado`);
@@ -167,7 +172,7 @@ export class UsersService implements OnModuleInit{
       }
       return requestedUsers;
     } catch (e) {
-      if (e instanceof NotFoundException) {
+      if (e instanceof NotFoundException || e instanceof UnauthorizedException) {
         throw e;
       }
       throw new BadRequestException(e.message);
